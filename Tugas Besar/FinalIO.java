@@ -1,5 +1,11 @@
-package TUBES;
+/*
+ JUDUL TUGAS : MEMBUAT STATISTIK KATA DARI SEBUAH FILE TEKS YANG DIBACA
+ AUTHOR : I GUSTI MADE GERALDI ( 191524011 ), MUHAMMAD SAKHI HARTANTO ( 1915124030 )
+ TANGGAL SELESAI : 15 JULI 2020
+ VERSION : 3.1 ( Penambahan Fitur dan Delimiters ) 
 
+ */
+package folder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,38 +13,47 @@ import java.util.TreeMap;
 import java.util.Scanner;
 import java.lang.String;
 
+
+// Class dinamakan FinalIO dikarenakan disini hanyalah satu satunya class yang tidak perlu memerlukan class lain.
 public class FinalIO {
 
     public static void main(String[] args) throws FileNotFoundException {
 
+        // Menggunakan Tree Map sebagai Struktur Data karena memiliki Ascending dan juga mendapatkan Valuenya
         TreeMap<String, Integer> map = new TreeMap<String, Integer>();
-        int total=0;
-        try (Scanner txtfile = new Scanner(new File("D:\\Indonesia Negaraku, Polban Kampusku\\Java\\TUBES\\src\\text.txt"))) { 
-            while (txtfile.hasNext()) {  
-                String word = txtfile.next();
-                String[] splitkata = word.toLowerCase().split("\\t|,|;|\\.|\\?|!|-|:|@|\\[|\\]|\\(|\\)|\\{|\\}|_|\\*|/\""); 
-                int i;
-                for (i = 0; i < splitkata.length; i++) {
-                    if(splitkata[i].equals("")){
-                            
-                    }else{                        
-                        Integer count = map.get(splitkata[i]); 
-                        if (map.containsKey(splitkata[i])) {
-                                map.put(splitkata[i], ++count);
-                        } else { 
-                            map.put(splitkata[i], 1);
+        int total = 0;
+        int i;
+        // Mensplit operator yang tidak perlu seperti " ~ ! @ # $ % ^ & * ( ) - _ < > ? / \ : ; ” “ { } [ ] ' "
+        String splitter = "\\t|,|;|\\.|\\?|!|-|:|@\\[|\\]|\\(|\\)|\\{|\\}|_|\\*|/\"|\\+|\\=|\\”|\\“|\\\"|\\#|\\$|\\%|\\^|\\&|\\<|\\>|\\~|\\/|\\\\|\\[|\\'";
+
+        // Menscan dan membuka + membaca File
+        try (Scanner txtfile = new Scanner(new File("C:\\Users\\User\\Documents\\NetBeansProjects\\JavaApplication2\\src\\folder\\text.txt"))) {
+            while (txtfile.hasNext()) { // Mengecek Kondisi apakah terdapat elemen selanjutnya atau tidak
+                String word = txtfile.next(); // Menjadikan text file dibagi per kata
+                String[] words = word.toLowerCase().split(splitter); //Fungsi untuk mensplit (delimiter) operator di dalam text file
+                for (i = 0; i < words.length; i++) { // Looping untuk panjang kata
+                    if (words[i].equals("")) { // Mengecek apakah text file sudah di akhir
+                    } else { // Jika tidak maka hitung
+                        Integer count = map.get(words[i]);
+                        if (map.containsKey(words[i])) { //mengembalikan nilai boolean true jika map memiliki kunci yang merujuk pada suatu nilai( words[i] ).
+                            map.put(words[i], ++count); // menggunakan fungsi put untuk mengisi key dan value nya
+                        } else {
+                            map.put(words[i], 1);
                         }
-                        total++;
+                        total++; // Menghitung total seluruh kata 
                     }
                 }
             }
-        } catch (FileNotFoundException e) {  
-            System.out.println(e + " \n " + " FILE NOT FOUND !");
+            // Menggunakan Exception untuk mengecek apakah File tersebut ada atau tidak
+        } catch (FileNotFoundException e) {
+            System.out.println(e + " \n " + " FILE NOT FOUND !"); 
         }
-
-        map.entrySet().stream().forEach((entry) -> {
-            System.out.println(entry.getKey()+" "+entry.getValue());
+        System.out.println("Kata" + "\t" + "Jumlah");
+        map.entrySet().stream().forEach((entry) -> { // Mengambil semua key dan value yang ada di map dengan memakai loop forEach
+            System.out.println(entry.getKey() + "\t" + entry.getValue());
         });
-        System.out.println("Total : "+total);
+
+        System.out.println("====================================");
+        System.out.println("Total Kata di Dalam File : " + total);
     }
 }
